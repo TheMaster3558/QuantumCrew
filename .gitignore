@@ -19,8 +19,5 @@ temp.errors
 # Exclude the PROS Toolchain
 !pros-toolchain-windows/usr/bin/
 
-# EZ-Template
-*.zip
-
 # PyCharm
 .idea/

@@ -9,8 +9,3 @@ Pull repository using
 git pull https://github.com/TheMaster3558/QuantumCrew
 ```
 
-If you are not using vscode then you need to run this everytime you open a new terminal
-
-```powershell
-.\Setup.ps1
-```
