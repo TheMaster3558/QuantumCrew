@@ -7,6 +7,11 @@
 /////
 
 
+pros::Motor leftIntakeMotor(13, pros::E_MOTOR_GEARSET_18, true);
+pros::Motor rightIntakeMotor(13, pros::E_MOTOR_GEARSET_18);
+pros::Motor_Group intake({leftIntakeMotor, rightIntakeMotor});
+
+
 // Chassis constructor
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
@@ -166,9 +171,8 @@ void opcontrol() {
         // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
         // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-        // . . .
-        // Put more user control code here!
-        // . . .
+        intake.move_relative(100);
+
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     }
 }
