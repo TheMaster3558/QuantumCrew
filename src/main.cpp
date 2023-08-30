@@ -15,13 +15,25 @@ bool intakeOn = false;
 
 void updateIntake() {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-        intake.move_velocity(100);
+        intake.move_velocity(150);
         intakeOn = true;
-    }
-    else {
+    } else {
         intake.brake();
         intakeOn = false;
     }
+}
+
+
+void printInfoToBuffer(char *buff, pros::Motor *motor) {
+    sprintf(
+            buff,
+            "Motor %d, Velocity=%f, Efficiency=%f, Power=%f, Temperature=%f C\n",
+            motor->get_port(),
+            motor->get_actual_velocity(),
+            motor->get_efficiency(),
+            motor->get_power(),
+            motor->get_temperature()
+    );
 }
 
 
@@ -31,19 +43,19 @@ void updateDisplay() {
         return;
     }
     if (intakeOn) {
-        master.rumble("- - - ");
+        master.rumble(".");
     }
 
-    char buff[5000];
-    snprintf(
-            buff,
-            sizeof(buff),
-            "Intake: %s\nThrottle: %i%%\nVelocity: %i %i",
-            intakeOn ? "On" : "Off",
-            1,
-            chassis.left_velocity(),
-            chassis.right_velocity()
-    );
+    char *buff;
+    for (auto motor: chassis.left_motors) {
+        printInfoToBuffer(buff, &motor);
+    }
+    for (auto motor: chassis.right_motors) {
+        printInfoToBuffer(buff, &motor);
+    }
+
+    printInfoToBuffer(buff, &leftIntakeMotor);
+    printInfoToBuffer(buff, &rightIntakeMotor);
 
     ez::print_to_screen(buff);
 }
@@ -100,7 +112,6 @@ Drive chassis(
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-    // Print our branding over your terminal :D
     pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
     // Configure your chassis controls
