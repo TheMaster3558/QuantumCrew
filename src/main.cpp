@@ -7,20 +7,57 @@
 /////
 
 
-pros::Motor leftIntakeMotor(13, pros::E_MOTOR_GEARSET_18, true);
-pros::Motor rightIntakeMotor(13, pros::E_MOTOR_GEARSET_18);
+pros::Motor leftIntakeMotor(3, pros::E_MOTOR_GEARSET_18);
+pros::Motor rightIntakeMotor(13, pros::E_MOTOR_GEARSET_18, true);
 pros::Motor_Group intake({leftIntakeMotor, rightIntakeMotor});
+bool intakeOn = false;
+
+
+void updateIntake() {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+        intake.move_velocity(100);
+        intakeOn = true;
+    }
+    else {
+        intake.brake();
+        intakeOn = false;
+    }
+}
+
+
+void updateDisplay() {
+    static int count = 0;
+    if (++count % (50 / ez::util::DELAY_TIME) != 0) {
+        return;
+    }
+    if (intakeOn) {
+        master.rumble("- - - ");
+    }
+
+    char buff[5000];
+    snprintf(
+            buff,
+            sizeof(buff),
+            "Intake: %s\nThrottle: %i%%\nVelocity: %i %i",
+            intakeOn ? "On" : "Off",
+            1,
+            chassis.left_velocity(),
+            chassis.right_velocity()
+    );
+
+    ez::print_to_screen(buff);
+}
 
 
 // Chassis constructor
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {1, 2}
+        {-1, -2}
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {-11, -12}
+        , {11, 12}
 
         // IMU Port
         , 21
@@ -64,14 +101,12 @@ Drive chassis(
  */
 void initialize() {
     // Print our branding over your terminal :D
-    ez::print_ez_template();
-
     pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
     // Configure your chassis controls
     chassis.toggle_modify_curve_with_controller(
             true); // Enables modifying the controller curve with buttons on the joysticks
-    chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
+    chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
     chassis.set_curve_default(0,
                               0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
     default_constants(); // Set the drive to your own constants from autons.cpp!
@@ -82,18 +117,20 @@ void initialize() {
     // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
 
     // Autonomous Selector using LLEMU
-    ez::as::auton_selector.add_autons({
-                                              Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-                                              Auton("Example Turn\n\nTurn 3 times.", turn_example),
-                                              Auton("Drive and Turn\n\nDrive forward, turn, come back. ",
-                                                    drive_and_turn),
-                                              Auton("Drive and Turn\n\nSlow down during drive.",
-                                                    wait_until_change_speed),
-                                              Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
-                                              Auton("Combine all 3 movements", combining_movements),
-                                              Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.",
-                                                    interfered_example),
-                                      });
+    ez::as::auton_selector.add_autons(
+            {
+                    Auton("Example Drive\n\nDrive forward and come back.", drive_example),
+                    Auton("Example Turn\n\nTurn 3 times.", turn_example),
+                    Auton("Drive and Turn\n\nDrive forward, turn, come back. ",
+                          drive_and_turn),
+                    Auton("Drive and Turn\n\nSlow down during drive.",
+                          wait_until_change_speed),
+                    Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
+                    Auton("Combine all 3 movements", combining_movements),
+                    Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.",
+                          interfered_example),
+            }
+    );
 
     // Initialize chassis and auton selector
     chassis.initialize();
@@ -166,12 +203,13 @@ void opcontrol() {
     while (true) {
 
         // chassis.tank(); // Tank control
-        // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-        chassis.arcade_standard(ez::SINGLE); // Standard single arcade
+        chassis.arcade_standard(ez::SPLIT); // Standard split arcade
+        // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
         // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
         // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-        intake.move_relative(100);
+        updateIntake();
+        updateDisplay();
 
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     }
