@@ -7,33 +7,25 @@
 /////
 
 
-pros::Motor leftIntakeMotor(3, pros::E_MOTOR_GEARSET_18);
-pros::Motor rightIntakeMotor(13, pros::E_MOTOR_GEARSET_18, true);
-pros::Motor_Group intake({leftIntakeMotor, rightIntakeMotor});
-bool intakeOn = false;
+pros::Motor catapult(19);
 
 
-void updateIntake() {
+void updateHoldCatapult() {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-        intake.move_velocity(150);
-        intakeOn = true;
-    } else {
-        intake.brake();
-        intakeOn = false;
+        catapult.move_velocity(200);
+    }
+    else {
+        catapult.brake();
     }
 }
 
 
-void printInfoToBuffer(char *buff, pros::Motor *motor) {
-    sprintf(
-            buff,
-            "Motor %d, Velocity=%f, Efficiency=%f, Power=%f, Temperature=%f C\n",
-            motor->get_port(),
-            motor->get_actual_velocity(),
-            motor->get_efficiency(),
-            motor->get_power(),
-            motor->get_temperature()
-    );
+void updateTapCatapult() {
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
+        catapult.move_velocity(200);
+        pros::delay(750);
+        catapult.brake();
+    }
 }
 
 
@@ -42,22 +34,6 @@ void updateDisplay() {
     if (++count % (50 / ez::util::DELAY_TIME) != 0) {
         return;
     }
-    if (intakeOn) {
-        master.rumble(".");
-    }
-
-    char *buff;
-    for (auto motor: chassis.left_motors) {
-        printInfoToBuffer(buff, &motor);
-    }
-    for (auto motor: chassis.right_motors) {
-        printInfoToBuffer(buff, &motor);
-    }
-
-    printInfoToBuffer(buff, &leftIntakeMotor);
-    printInfoToBuffer(buff, &rightIntakeMotor);
-
-    ez::print_to_screen(buff);
 }
 
 
@@ -65,11 +41,11 @@ void updateDisplay() {
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {-1, -2}
+        {-11, -12, 13}
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {11, 12}
+        , {1}
 
         // IMU Port
         , 21
@@ -116,16 +92,14 @@ void initialize() {
 
     // Configure your chassis controls
     chassis.toggle_modify_curve_with_controller(
-            true); // Enables modifying the controller curve with buttons on the joysticks
-    chassis.set_active_brake(0.1); // Sets the active brake kP. We recommend 0.1.
-    chassis.set_curve_default(0,
-                              0); // Defaults for curve. If using tank, only the first parameter is used. (Comment this line out if you have an SD card!)
-    default_constants(); // Set the drive to your own constants from autons.cpp!
-    exit_condition_defaults(); // Set the exit conditions to your own constants from autons.cpp!
+            false);
+    chassis.set_active_brake(0.1);
+    chassis.set_curve_default(5,
+                              5);
+    default_constants();
+    exit_condition_defaults();
 
-    // These are already defaulted to these buttons, but you can change the left/right curve buttons here!
-    // chassis.set_left_curve_buttons (pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_RIGHT); // If using tank, only the left side is used.
-    // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
+    catapult.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons(
@@ -219,7 +193,8 @@ void opcontrol() {
         // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
         // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-        updateIntake();
+        updateHoldCatapult();
+        updateTapCatapult();
         updateDisplay();
 
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
