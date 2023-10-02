@@ -7,12 +7,13 @@
 /////
 
 
-pros::Motor catapult(19);
+pros::Motor catapult(19, pros::E_MOTOR_GEARSET_06, true);
+pros::Motor intake(18);
 
 
-void updateHoldCatapult() {
+void HoldCatapult() {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-        catapult.move_velocity(200);
+        catapult.move_velocity(100);
     }
     else {
         catapult.brake();
@@ -20,11 +21,14 @@ void updateHoldCatapult() {
 }
 
 
-void updateTapCatapult() {
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) {
-        catapult.move_velocity(200);
-        pros::delay(750);
-        catapult.brake();
+void updateIntake() {
+    void HoldCatapult() {
+        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+            intake.move_velocity(100);
+        }
+        else {
+            intake.brake();
+        }
     }
 }
 
@@ -45,7 +49,7 @@ Drive chassis(
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {1}
+        , {1, -2, 3}
 
         // IMU Port
         , 21
@@ -94,7 +98,7 @@ void initialize() {
     chassis.toggle_modify_curve_with_controller(
             false);
     chassis.set_active_brake(0.1);
-    chassis.set_curve_default(5,
+    chassis.set_curve_default(3,
                               5);
     default_constants();
     exit_condition_defaults();
@@ -120,6 +124,8 @@ void initialize() {
     // Initialize chassis and auton selector
     chassis.initialize();
     ez::as::initialize();
+
+    //autonomous();
 }
 
 
@@ -193,8 +199,7 @@ void opcontrol() {
         // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
         // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-        updateHoldCatapult();
-        updateTapCatapult();
+        updateCatapult();
         updateDisplay();
 
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
