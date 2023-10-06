@@ -11,7 +11,7 @@ pros::Motor catapult(19, pros::E_MOTOR_GEARSET_06, true);
 pros::Motor intake(18);
 
 
-void HoldCatapult() {
+void updateCatapult() {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
         catapult.move_velocity(100);
     }
@@ -22,13 +22,14 @@ void HoldCatapult() {
 
 
 void updateIntake() {
-    void HoldCatapult() {
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-            intake.move_velocity(100);
-        }
-        else {
-            intake.brake();
-        }
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        intake.move_velocity(200);
+    }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        intake.move_velocity(-200);
+    }
+    else {
+        intake.brake();
     }
 }
 
@@ -200,6 +201,7 @@ void opcontrol() {
         // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
         updateCatapult();
+        updateIntake();
         updateDisplay();
 
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
