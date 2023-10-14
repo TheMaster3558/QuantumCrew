@@ -7,8 +7,8 @@
 /////
 
 
-pros::Motor catapult(19, pros::E_MOTOR_GEARSET_06, true);
-pros::Motor intake(18);
+pros::Motor catapult(19, pros::E_MOTOR_GEARSET_RED, true);
+pros::Motor intake(18, pros::E_MOTOR_GEARSET_GREEN);
 
 
 void updateCatapult() {
