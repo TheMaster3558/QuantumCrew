@@ -7,8 +7,8 @@
 /////
 
 
-pros::Motor catapult(19, pros::E_MOTOR_GEARSET_RED, true);
-pros::Motor intake(18, pros::E_MOTOR_GEARSET_GREEN);
+pros::Motor catapult(7, pros::E_MOTOR_GEAR_RED, true);
+pros::Motor intake(8, pros::E_MOTOR_GEAR_GREEN);
 
 
 void updateCatapult() {
@@ -46,11 +46,11 @@ void updateDisplay() {
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {-11, -12, 13}
+        {1, 2, -3}
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {1, -2, 3}
+        , {4, 5, -6}
 
         // IMU Port
         , 21
@@ -109,16 +109,7 @@ void initialize() {
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons(
             {
-                    Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-                    Auton("Example Turn\n\nTurn 3 times.", turn_example),
-                    Auton("Drive and Turn\n\nDrive forward, turn, come back. ",
-                          drive_and_turn),
-                    Auton("Drive and Turn\n\nSlow down during drive.",
-                          wait_until_change_speed),
-                    Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
-                    Auton("Combine all 3 movements", combining_movements),
-                    Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.",
-                          interfered_example),
+                Auton("test auton", test_drive)
             }
     );
 
@@ -171,6 +162,7 @@ void autonomous() {
     chassis.reset_drive_sensor(); // Reset drive sensors to 0
     chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 
+    ez::as::auton_selector.print_selected_auton();
     ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
 

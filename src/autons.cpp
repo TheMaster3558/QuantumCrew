@@ -243,3 +243,17 @@ void interfered_example() {
 // . . .
 // Make your own autonomous functions here!
 // . . .
+
+void test_drive() {
+    chassis.set_drive_pid(20, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(20, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_swing_pid(ez::RIGHT_SWING, 180, TURN_SPEED);
+    chassis.wait_drive();
+}
