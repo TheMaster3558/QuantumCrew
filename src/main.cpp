@@ -11,9 +11,27 @@ pros::Motor catapult(7, pros::E_MOTOR_GEAR_RED, true);
 pros::Motor intake(8, pros::E_MOTOR_GEAR_GREEN);
 
 
+int catapult_top = 0;
+
+
+void moveAndWait(pros::Motor motor, int position, int velocity) {
+    motor.move_absolute(position, velocity);
+    while (!((motor.get_position() < position + 10) && (motor.get_position() > position - 10))) {
+        pros::delay(2);
+    }
+    catapult_top = motor.get_position();
+}
+
+
 void updateCatapult() {
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-        catapult.move_velocity(100);
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        catapult.move_velocity(600);
+    }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        catapult.move_velocity(-600);
+    }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+
     }
     else {
         catapult.brake();
@@ -22,10 +40,10 @@ void updateCatapult() {
 
 
 void updateIntake() {
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
         intake.move_velocity(200);
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
         intake.move_velocity(-200);
     }
     else {
@@ -39,6 +57,8 @@ void updateDisplay() {
     if (++count % (50 / ez::util::DELAY_TIME) != 0) {
         return;
     }
+
+    ez::print_to_screen(to_string(catapult.get_position()));
 }
 
 
@@ -46,14 +66,14 @@ void updateDisplay() {
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {1, 2, -3}
+        {1, -2, 3}
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
         , {4, 5, -6}
 
         // IMU Port
-        , 21
+        , 9
 
         // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
         //    (or tracking wheel diameter)
@@ -104,7 +124,7 @@ void initialize() {
     default_constants();
     exit_condition_defaults();
 
-    catapult.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons(
