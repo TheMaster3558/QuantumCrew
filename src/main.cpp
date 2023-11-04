@@ -7,8 +7,13 @@
 /////
 
 
-pros::Motor catapult(7, pros::E_MOTOR_GEAR_RED, true);
-pros::Motor intake(8, pros::E_MOTOR_GEAR_GREEN);
+pros::ADIDigitalIn bumperSwitch('A');
+
+pros::Motor catapultLeft(6, pros::E_MOTOR_GEAR_RED);
+pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED, true);
+pros::MotorGroup catapult({catapultLeft, catapultRight});
+
+pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
 
 
 int catapult_top = 0;
@@ -23,18 +28,27 @@ void moveAndWait(pros::Motor motor, int position, int velocity) {
 }
 
 
-void updateCatapult() {
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-        catapult.move_velocity(600);
+void waitForPress() {
+    while (!bumperSwitch.get_value()) {
+        pros::delay(5);
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+}
+
+
+void updateCatapult() {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+        pros::Task task{[=] {
+            waitForPress();
+            catapult.brake();
+        }};
         catapult.move_velocity(-600);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-
-    }
-    else {
-        catapult.brake();
+        pros::Task task{[=] {
+            waitForPress();
+            catapult.move_relative(500, 600);
+        }};
+        catapult.move_velocity(600);
     }
 }
 
@@ -58,7 +72,7 @@ void updateDisplay() {
         return;
     }
 
-    ez::print_to_screen(to_string(catapult.get_position()));
+    ez::print_to_screen(to_string(bumperSwitch.get_value()));
 }
 
 
@@ -66,14 +80,14 @@ void updateDisplay() {
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {1, -2, 3}
+        {-4, -5}
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {4, 5, -6}
+        , {2, 3}
 
         // IMU Port
-        , 9
+        , 21
 
         // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
         //    (or tracking wheel diameter)
@@ -85,7 +99,7 @@ Drive chassis(
 
         // External Gear Ratio (MUST BE DECIMAL)
         //    (or gear ratio of tracking wheel)
-        // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
+        // eg. if you.r drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
         // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
         , 2.333
 
@@ -124,7 +138,7 @@ void initialize() {
     default_constants();
     exit_condition_defaults();
 
-    catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    catapult.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons(
@@ -136,8 +150,6 @@ void initialize() {
     // Initialize chassis and auton selector
     chassis.initialize();
     ez::as::initialize();
-
-    //autonomous();
 }
 
 
