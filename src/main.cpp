@@ -1,4 +1,4 @@
-#include "main.h"
+#include "main.hpp"
 
 
 /////
@@ -9,46 +9,31 @@
 
 pros::ADIDigitalIn bumperSwitch('A');
 
-pros::Motor catapultLeft(6, pros::E_MOTOR_GEAR_RED);
-pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED, true);
+pros::Motor catapultLeft(8, pros::E_MOTOR_GEAR_RED, true);
+pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED);
 pros::MotorGroup catapult({catapultLeft, catapultRight});
 
 pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
 
 
-int catapult_top = 0;
-
-
-void moveAndWait(pros::Motor motor, int position, int velocity) {
-    motor.move_absolute(position, velocity);
-    while (!((motor.get_position() < position + 10) && (motor.get_position() > position - 10))) {
-        pros::delay(2);
-    }
-    catapult_top = motor.get_position();
-}
-
-
-void waitForPress() {
-    while (!bumperSwitch.get_value()) {
-        pros::delay(5);
-    }
-}
-
-
 void updateCatapult() {
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-        pros::Task task{[=] {
-            waitForPress();
-            catapult.brake();
-        }};
-        catapult.move_velocity(-600);
+    static int manualVelocity = 600;
+
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        manualVelocity = std::max(manualVelocity - 100, 100);
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-        pros::Task task{[=] {
-            waitForPress();
-            catapult.move_relative(500, 600);
-        }};
-        catapult.move_velocity(600);
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        manualVelocity = std::min(manualVelocity + 100, 600);
+    }
+
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        catapult.move_velocity(manualVelocity);
+    }
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        catapult.move_velocity(-manualVelocity);
+    }
+    else {
+        catapult.brake();
     }
 }
 
@@ -80,14 +65,14 @@ void updateDisplay() {
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {-4, -5}
+        {-2, -3}
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {2, 3}
+        , {4, 5}
 
         // IMU Port
-        , 21
+        , 9
 
         // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
         //    (or tracking wheel diameter)
@@ -133,19 +118,22 @@ void initialize() {
     chassis.toggle_modify_curve_with_controller(
             false);
     chassis.set_active_brake(0.1);
-    chassis.set_curve_default(3,
-                              5);
+    chassis.set_curve_default(3, 5);
     default_constants();
     exit_condition_defaults();
 
     catapult.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
 
     // Autonomous Selector using LLEMU
-    ez::as::auton_selector.add_autons(
-            {
-                Auton("test auton", test_drive)
-            }
-    );
+    ez::as::auton_selector.add_autons({
+              Auton("Example Drive\n\nDrive forward and come back.", drive_example),
+              Auton("Example Turn\n\nTurn 3 times.", turn_example),
+              Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
+              Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
+              Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
+              Auton("Combine all 3 movements", combining_movements),
+              Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example)
+    });
 
     // Initialize chassis and auton selector
     chassis.initialize();
@@ -192,7 +180,7 @@ void autonomous() {
     chassis.reset_pid_targets(); // Resets PID targets to 0
     chassis.reset_gyro(); // Reset gyro position to 0
     chassis.reset_drive_sensor(); // Reset drive sensors to 0
-    chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
+    chassis.set_drive_brake(pros::E_MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 
     ez::as::auton_selector.print_selected_auton();
     ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
@@ -214,7 +202,7 @@ void autonomous() {
  */
 void opcontrol() {
     // This is preference to what you like to drive on.
-    chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+    chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
 
     while (true) {
 
