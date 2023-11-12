@@ -8,29 +8,41 @@
 
 
 pros::ADIDigitalIn bumperSwitch('A');
+pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
 
 pros::Motor catapultLeft(8, pros::E_MOTOR_GEAR_RED, true);
 pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED);
 pros::MotorGroup catapult({catapultLeft, catapultRight});
 
-pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
+
+const int NORMAL_VELOCITY = 600;
+const int MATCH_LOADING_VELOCITY = 50;
+unsigned int catapultVelocity = NORMAL_VELOCITY;
 
 
 void updateCatapult() {
-    static int manualVelocity = 600;
 
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-        manualVelocity = std::max(manualVelocity - 100, 100);
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+        catapultVelocity = MATCH_LOADING_VELOCITY;
     }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-        manualVelocity = std::min(manualVelocity + 100, 600);
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
+        catapultVelocity = NORMAL_VELOCITY;
     }
 
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-        catapult.move_velocity(manualVelocity);
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+        catapult.move_relative(50, NORMAL_VELOCITY);
+        pros::delay(1000);
+    }
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+        catapult.move_relative(700, NORMAL_VELOCITY);
+        pros::delay(1000);
+    }
+
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        catapult.move_velocity(catapultVelocity);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-        catapult.move_velocity(-manualVelocity);
+        catapult.move_velocity(-catapultVelocity);
     }
     else {
         catapult.brake();
@@ -56,8 +68,6 @@ void updateDisplay() {
     if (++count % (50 / ez::util::DELAY_TIME) != 0) {
         return;
     }
-
-    ez::print_to_screen(to_string(bumperSwitch.get_value()));
 }
 
 
@@ -126,13 +136,9 @@ void initialize() {
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
-              Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-              Auton("Example Turn\n\nTurn 3 times.", turn_example),
-              Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
-              Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
-              Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
-              Auton("Combine all 3 movements", combining_movements),
-              Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example)
+              Auton("Skills\nAuton for skills", skills),
+              Auton("Same\nStarting on your own side", same),
+              Auton("Opposite\nStarting on the opposite side", opposite)
     });
 
     // Initialize chassis and auton selector

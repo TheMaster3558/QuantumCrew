@@ -57,8 +57,10 @@
 extern "C" {
 #endif
 extern pros::ADIDigitalIn bumperSwitch;
-extern pros::MotorGroup catapult;
 extern pros::Motor intake;
+extern pros::MotorGroup catapult;
+extern const int NORMAL_VELOCITY;
+extern const int MATCH_LOADING_VELOCITY;
 
 void autonomous(void);
 void initialize(void);
