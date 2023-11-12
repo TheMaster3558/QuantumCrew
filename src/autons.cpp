@@ -243,3 +243,38 @@ void interfered_example() {
 // . . .
 // Make your own autonomous functions here!
 // . . .
+
+///
+// Skills Auton
+///
+void skills() {
+    chassis.set_turn_pid(45, TURN_SPEED);
+
+    chassis.set_drive_pid(6, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(-20, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(4, DRIVE_SPEED);
+
+    catapult.move_velocity(MATCH_LOADING_VELOCITY - 15);
+    pros::delay(90000);
+
+    chassis.set_swing_pid(ez::RIGHT_SWING, 90, SWING_SPEED);
+    chassis.wait_drive();
+}
+
+///
+// Auton for if you're on your own side
+///
+void same() {
+
+}
+
+///
+// Auton for if you're own the opposite side
+///
+void opposite() {
+
+}
