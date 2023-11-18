@@ -77,10 +77,10 @@ void toggleFlap() {
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
         in = !in;
         if (in) {
-            flap.move_relative(-500, 600);
+            flap.move_relative(-700, 600);
         }
         else {
-            flap.move_relative(500, 600);
+            flap.move_relative(700, 600);
         }
     }
 }
