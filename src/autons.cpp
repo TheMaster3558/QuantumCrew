@@ -301,7 +301,7 @@ void pushInitialBall(int angleMultipler) {
     catapult.move_relative(800, 600);
     pros::delay(500);
 
-    chassis.set_drive_pid(22, DRIVE_SPEED, true);
+    chassis.set_drive_pid(22.75, DRIVE_SPEED, true);
     chassis.wait_drive();
 
     chassis.set_turn_pid(90 * angleMultipler, TURN_SPEED);
@@ -310,13 +310,17 @@ void pushInitialBall(int angleMultipler) {
     chassis.set_drive_pid(5, DRIVE_SPEED);
     intake.move_velocity(200);
     pros::delay(2000);
-    intake.brake();
+
 
     chassis.set_drive_pid(-5, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(270, TURN_SPEED);
+    chassis.set_drive_pid(5, DRIVE_SPEED);
     chassis.wait_drive();
+
+    chassis.set_drive_pid(-3, DRIVE_SPEED);
+    chassis.wait_drive();
+    intake.brake();
 }
 
 
