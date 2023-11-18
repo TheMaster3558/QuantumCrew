@@ -248,79 +248,90 @@ void interfered_example() {
 // Skills Auton
 ///
 void skills() {
-    chassis.set_swing_pid(ez::RIGHT_SWING, 45, SWING_SPEED);
+    chassis.set_turn_pid(45, TURN_SPEED);
     chassis.wait_drive();
 
     chassis.set_drive_pid(6, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_swing_pid(ez::LEFT_SWING, 20, SWING_SPEED);
+    chassis.set_turn_pid(-20, TURN_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(4, DRIVE_SPEED);
+    chassis.set_drive_pid(5, DRIVE_SPEED);
     chassis.wait_drive();
 
     catapult.move_velocity(MATCH_LOADING_VELOCITY);
-    pros::delay(45000);
+    pros::delay(1000);
     catapult.brake();
 
-    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.set_turn_pid(70, TURN_SPEED);
     chassis.wait_drive();
+
+    chassis.set_drive_pid(9.5, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(7, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-15, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(32, true);
+    chassis.wait_drive();
+
+    // chassis.set_drive_pid(<inches>, DRIVE_SPEED);
+    // chassis.set_turn_pid(<degrees>, TURN_SPEED);
 }
 
 
 ///
 //  Score the match loaded ball
 ///
-void pushInitialBall(int angleMultiplier) {
+void pushInitialBall(int angleMultipler) {
+    catapult.move_relative(800, 600);
+    pros::delay(500);
+
     chassis.set_drive_pid(25, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(90 * angleMultiplier, TURN_SPEED);
+    chassis.set_turn_pid(90 * angleMultipler, TURN_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(10, DRIVE_SPEED, true);
+    chassis.set_drive_pid(5, DRIVE_SPEED );
     intake.move_velocity(-200);
-    chassis.wait_drive();
+    pros::delay(2000);
     intake.brake();
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(270, TURN_SPEED);
+    chassis.wait_drive();
 }
 
-
-///
-// Pick up a ball from when the robot just scores a ball
-///
-void intakeBallStartFromGoal() {
-    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
-    chassis.wait_drive();
-
-    chassis.set_turn_pid(180, TURN_SPEED);
-    chassis.wait_drive();
-
-    chassis.set_drive_pid(10, DRIVE_SPEED, true);
-    intake.move_velocity(200);
-    chassis.wait_drive();
-    intake.brake();
-}
 
 ///
 // Auton for if you're on your own side
 // 1. Score match loaded ball
-// 2. Intake ball
+// 2. TODO Intake ball
 // 3. TODO Score intaked ball
 ///
 void same() {
     pushInitialBall(1);
-    intakeBallStartFromGoal();
 }
 
 ///
 // Auton for if you're own the opposite side
 // 1. Score match loaded ball
-// 2. Intake ball
+// 2. TODO Intake ball
 // 3. TODO Launch intaked ball to our side
 ///
 void opposite() {
     pushInitialBall(-1);
-    intakeBallStartFromGoal();
-    catapult.move_relative(1815);
 }

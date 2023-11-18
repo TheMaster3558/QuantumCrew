@@ -9,7 +9,7 @@
 
 pros::ADIDigitalIn bumperSwitch('A');
 pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
-pros::Motor flap(..., ...);
+pros::Motor flap(6, pros::E_MOTOR_GEAR_RED);
 
 pros::Motor catapultLeft(8, pros::E_MOTOR_GEAR_RED, true);
 pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED);
@@ -63,16 +63,9 @@ void updateIntake() {
 }
 
 
-bool in = true;
-
-
 void toggleFlap() {
-    in = !in;
-    if (in) {
-        flap.move_relative(-100);
-    }
-    else {
-        flap.move_relative(100);
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+
     }
 }
 
@@ -141,13 +134,18 @@ void initialize() {
     pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
     // Configure your chassis controls
-    chassis.toggle_modify_curve_with_controller(true);
+    chassis.toggle_modify_curve_with_controller(false);
     chassis.set_active_brake(0.1);
     chassis.set_curve_default(3, 5);
     default_constants();
     exit_condition_defaults();
 
     catapult.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+    flap.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+
+    intake.tare_position();
+    flap.tare_position();
+    catapult.tare_position();
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
@@ -235,6 +233,7 @@ void opcontrol() {
 
         updateCatapult();
         updateIntake();
+        toggleFlap();
         updateDisplay();
 
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

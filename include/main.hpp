@@ -59,6 +59,7 @@ extern "C" {
 extern pros::ADIDigitalIn bumperSwitch;
 extern pros::Motor intake;
 extern pros::MotorGroup catapult;
+extern pros::Motor flap;
 extern const int NORMAL_VELOCITY;
 extern const int MATCH_LOADING_VELOCITY;
 
