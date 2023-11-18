@@ -12,9 +12,10 @@ void swing_example();
 void combining_movements();
 void interfered_example();
 
+void doNothing();
 void skills();
-void same();
-void opposite();
+void goRight();
+void goLeft();
 
 void default_constants();
 void one_mogo_constants();

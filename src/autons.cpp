@@ -245,6 +245,13 @@ void interfered_example() {
 // . . .
 
 ///
+// Do nothing
+///
+void doNothing() {
+
+}
+
+///
 // Skills Auton
 ///
 void skills() {
@@ -294,7 +301,7 @@ void pushInitialBall(int angleMultipler) {
     catapult.move_relative(800, 600);
     pros::delay(500);
 
-    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.set_drive_pid(22, DRIVE_SPEED, true);
     chassis.wait_drive();
 
     chassis.set_turn_pid(90 * angleMultipler, TURN_SPEED);
@@ -314,21 +321,17 @@ void pushInitialBall(int angleMultipler) {
 
 
 ///
-// Auton for if you're on your own side
+// Auton for if you need to turn right
 // 1. Score match loaded ball
-// 2. TODO Intake ball
-// 3. TODO Score intaked ball
 ///
-void same() {
+void goRight() {
     pushInitialBall(1);
 }
 
 ///
-// Auton for if you're own the opposite side
+// Auton for if you need to turn left
 // 1. Score match loaded ball
-// 2. TODO Intake ball
-// 3. TODO Launch intaked ball to our side
 ///
-void opposite() {
+void goLeft() {
     pushInitialBall(-1);
 }

@@ -165,9 +165,10 @@ void initialize() {
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
+              Auton("Do nothing", doNothing),
               Auton("Skills\nAuton for skills", skills),
-              Auton("Same\nStarting on your own side", same),
-              Auton("Opposite\nStarting on the opposite side", opposite)
+              Auton("Right\nNeed to turn right", goRight),
+              Auton("Left\nNeed to turn left", goLeft)
     });
 
     // Initialize chassis and auton selector
