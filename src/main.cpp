@@ -9,6 +9,7 @@
 
 pros::ADIDigitalIn bumperSwitch('A');
 pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
+pros::Motor flap(..., ...);
 
 pros::Motor catapultLeft(8, pros::E_MOTOR_GEAR_RED, true);
 pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED);
@@ -21,7 +22,6 @@ unsigned int catapultVelocity = NORMAL_VELOCITY;
 
 
 void updateCatapult() {
-
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
         catapultVelocity = MATCH_LOADING_VELOCITY;
     }
@@ -30,11 +30,11 @@ void updateCatapult() {
     }
 
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        catapult.move_relative(50, NORMAL_VELOCITY);
+        catapult.move_relative(265, NORMAL_VELOCITY);
         pros::delay(1000);
     }
     else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-        catapult.move_relative(700, NORMAL_VELOCITY);
+        catapult.move_relative(1550, NORMAL_VELOCITY);
         pros::delay(1000);
     }
 
@@ -63,11 +63,27 @@ void updateIntake() {
 }
 
 
+bool in = true;
+
+
+void toggleFlap() {
+    in = !in;
+    if (in) {
+        flap.move_relative(-100);
+    }
+    else {
+        flap.move_relative(100);
+    }
+}
+
+
 void updateDisplay() {
     static int count = 0;
     if (++count % (50 / ez::util::DELAY_TIME) != 0) {
         return;
     }
+
+    ez::print_to_screen(to_string(catapultVelocity));
 }
 
 
@@ -125,8 +141,7 @@ void initialize() {
     pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
     // Configure your chassis controls
-    chassis.toggle_modify_curve_with_controller(
-            false);
+    chassis.toggle_modify_curve_with_controller(true);
     chassis.set_active_brake(0.1);
     chassis.set_curve_default(3, 5);
     default_constants();
