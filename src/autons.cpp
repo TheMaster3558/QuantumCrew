@@ -248,6 +248,7 @@ void interfered_example() {
 // Skills Auton
 ///
 void skills() {
+    /*
     chassis.set_turn_pid(45, TURN_SPEED);
     chassis.wait_drive();
 
@@ -261,7 +262,7 @@ void skills() {
     chassis.wait_drive();
 
     catapult.move_velocity(MATCH_LOADING_VELOCITY);
-    pros::delay(50000);
+    pros::delay(40000);
     catapult.brake();
 
     chassis.set_turn_pid(70, TURN_SPEED);
@@ -284,6 +285,37 @@ void skills() {
 
     chassis.set_drive_pid(32, true);
     chassis.wait_drive();
+    */
+
+    ///*
+    catapult.move_velocity(MATCH_LOADING_VELOCITY);
+    pros::delay(40000);
+    catapult.brake();
+
+    chassis.set_drive_pid(15, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(30, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_speed(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(12, DRIVE_SPEED, true);
+    chassis.wait_drive()
+    //*/
 }
 
 
