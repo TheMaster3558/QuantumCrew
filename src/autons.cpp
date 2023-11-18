@@ -261,7 +261,7 @@ void skills() {
     chassis.wait_drive();
 
     catapult.move_velocity(MATCH_LOADING_VELOCITY);
-    pros::delay(1000);
+    pros::delay(50000);
     catapult.brake();
 
     chassis.set_turn_pid(70, TURN_SPEED);
@@ -284,9 +284,6 @@ void skills() {
 
     chassis.set_drive_pid(32, true);
     chassis.wait_drive();
-
-    // chassis.set_drive_pid(<inches>, DRIVE_SPEED);
-    // chassis.set_turn_pid(<degrees>, TURN_SPEED);
 }
 
 
@@ -303,8 +300,8 @@ void pushInitialBall(int angleMultipler) {
     chassis.set_turn_pid(90 * angleMultipler, TURN_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(5, DRIVE_SPEED );
-    intake.move_velocity(-200);
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    intake.move_velocity(200);
     pros::delay(2000);
     intake.brake();
 

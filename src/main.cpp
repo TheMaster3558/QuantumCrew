@@ -17,11 +17,18 @@ pros::MotorGroup catapult({catapultLeft, catapultRight});
 
 
 const int NORMAL_VELOCITY = 600;
-const int MATCH_LOADING_VELOCITY = 50;
+const int MATCH_LOADING_VELOCITY = 55;
 unsigned int catapultVelocity = NORMAL_VELOCITY;
 
 
 void updateCatapult() {
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        catapultVelocity--;
+    }
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        catapultVelocity++;
+    }
+
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
         catapultVelocity = MATCH_LOADING_VELOCITY;
     }
@@ -63,9 +70,18 @@ void updateIntake() {
 }
 
 
+bool in = true;
+
+
 void toggleFlap() {
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-
+        in = !in;
+        if (in) {
+            flap.move_relative(-500, 600);
+        }
+        else {
+            flap.move_relative(500, 600);
+        }
     }
 }
 
