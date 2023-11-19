@@ -16,9 +16,7 @@ pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED);
 pros::MotorGroup catapult({catapultLeft, catapultRight});
 
 
-const int NORMAL_VELOCITY = 600;
-const int MATCH_LOADING_VELOCITY = 55;
-unsigned int catapultVelocity = NORMAL_VELOCITY;
+unsigned int catapultVelocity = 55;
 
 
 void updateCatapult() {
@@ -29,19 +27,12 @@ void updateCatapult() {
         catapultVelocity++;
     }
 
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        catapultVelocity = MATCH_LOADING_VELOCITY;
-    }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
-        catapultVelocity = NORMAL_VELOCITY;
-    }
-
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        catapult.move_relative(265, NORMAL_VELOCITY);
+        catapult.move_relative(265, catapultVelocity);
         pros::delay(1000);
     }
     else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-        catapult.move_relative(1550, NORMAL_VELOCITY);
+        catapult.move_relative(1550, catapultVelocity);
         pros::delay(1000);
     }
 

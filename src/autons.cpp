@@ -267,7 +267,7 @@ void skills() {
     chassis.set_drive_pid(5, DRIVE_SPEED);
     chassis.wait_drive();
 
-    catapult.move_velocity(MATCH_LOADING_VELOCITY);
+    catapult.move_velocity(catapultVelocity);
     pros::delay(40000);
     catapult.brake();
 
