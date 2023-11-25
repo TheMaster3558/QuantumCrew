@@ -27,16 +27,7 @@ void updateCatapult() {
         catapultVelocity++;
     }
 
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        catapult.move_relative(265, catapultVelocity);
-        pros::delay(1000);
-    }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-        catapult.move_relative(1550, catapultVelocity);
-        pros::delay(1000);
-    }
-
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
         catapult.move_velocity(catapultVelocity);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
