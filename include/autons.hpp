@@ -3,6 +3,9 @@
 #include "EZ-Template/drive/drive.hpp"
 
 extern Drive chassis;
+extern const int DRIVE_SPEED;
+extern const int TURN_SPEED;
+extern const int SWING_SPEED;
 
 void drive_example();
 void turn_example();
