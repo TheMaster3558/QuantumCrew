@@ -14,7 +14,7 @@ pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
 pros::Motor catapult(8, pros::E_MOTOR_GEAR_RED, true);
 
 
-unsigned int catapultVelocity = 55;
+unsigned int catapultVelocity = 75;
 
 
 void updateFlaps() {
