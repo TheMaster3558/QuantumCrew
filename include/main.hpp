@@ -57,10 +57,10 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern pros::ADIDigitalIn bumperSwitch;
+extern pros::ADIDigitalOut rightFlap;
+extern bool rightFlapState;
 extern pros::Motor intake;
 extern pros::Motor catapult;
-extern pros::Motor flap;
 extern unsigned int catapultVelocity;
 
 void autonomous(void);
