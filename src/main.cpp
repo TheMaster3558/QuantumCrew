@@ -14,7 +14,7 @@ pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
 pros::Motor catapult(8, pros::E_MOTOR_GEAR_RED, true);
 
 
-unsigned int catapultVelocity = 75;
+unsigned int catapultVelocity = 65;
 
 
 void updateFlaps() {
@@ -144,6 +144,9 @@ void initialize() {
     // Initialize chassis and auton selector
     chassis.initialize();
     ez::as::initialize();
+
+    pros::delay(20000);
+    autonomous();
 }
 
 
