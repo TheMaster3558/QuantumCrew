@@ -7,13 +7,10 @@
 /////
 
 
-pros::ADIDigitalIn bumperSwitch('A');
 pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
 pros::Motor flap(6, pros::E_MOTOR_GEAR_RED);
 
-pros::Motor catapultLeft(8, pros::E_MOTOR_GEAR_RED, true);
-pros::Motor catapultRight(7, pros::E_MOTOR_GEAR_RED);
-pros::MotorGroup catapult({catapultLeft, catapultRight});
+pros::Motor catapult(8, pros::E_MOTOR_GEAR_RED, true);
 
 
 unsigned int catapultVelocity = 55;
@@ -82,11 +79,11 @@ void updateDisplay() {
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {-2, -3}
+        {-2, -3, -7}
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {4, 5}
+        , {4, 5, 6}
 
         // IMU Port
         , 9
@@ -138,7 +135,7 @@ void initialize() {
     default_constants();
     exit_condition_defaults();
 
-    catapult.set_brake_modes(pros::E_MOTOR_BRAKE_HOLD);
+    catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     flap.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
     intake.tare_position();
@@ -147,11 +144,11 @@ void initialize() {
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
-              Auton("Do nothing", doNothing),
-              Auton("Skills\nAuton for skills", skills),
-              Auton("Right\nNeed to turn right", goRight),
-              Auton("Left\nNeed to turn left", goLeft)
-    });
+                                              Auton("Do nothing", doNothing),
+                                              Auton("Skills\nAuton for skills", skills),
+                                              Auton("Right\nNeed to turn right", goRight),
+                                              Auton("Left\nNeed to turn left", goLeft)
+                                      });
 
     // Initialize chassis and auton selector
     chassis.initialize();

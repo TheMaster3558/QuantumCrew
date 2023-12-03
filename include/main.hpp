@@ -59,7 +59,7 @@ extern "C" {
 #endif
 extern pros::ADIDigitalIn bumperSwitch;
 extern pros::Motor intake;
-extern pros::MotorGroup catapult;
+extern pros::Motor catapult;
 extern pros::Motor flap;
 extern unsigned int catapultVelocity;
 
