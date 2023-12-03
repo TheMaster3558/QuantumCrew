@@ -5,6 +5,8 @@
 // Skills Auton
 ///
 void skills() {
+    // TODO: Run right flap
+
     chassis.set_turn_pid(45, TURN_SPEED);
     chassis.wait_drive();
 
@@ -21,24 +23,12 @@ void skills() {
     pros::delay(40000);
     catapult.brake();
 
-    chassis.set_turn_pid(70, TURN_SPEED);
+    chassis.set_turn_pid(-80, TURN_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(9.5, DRIVE_SPEED, true);
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
-    chassis.wait_drive();
-
-    chassis.set_drive_pid(7, DRIVE_SPEED, true);
-    chassis.wait_drive();
-
-    chassis.set_drive_pid(-15, DRIVE_SPEED, true);
-    chassis.wait_drive();
-
-    chassis.set_turn_pid(180, TURN_SPEED);
-    chassis.wait_drive();
-
-    chassis.set_drive_pid(32, true);
+    chassis.set_swing_pid(ez::RIGHT_SWING, -100, SWING_SPEED);
     chassis.wait_drive();
 }
