@@ -20,7 +20,7 @@ void skills() {
     chassis.wait_drive();
 
     catapult.move_velocity(catapultVelocity);
-    pros::delay(40000);
+    pros::delay(50000);
     catapult.brake();
 
     chassis.set_turn_pid(-80, TURN_SPEED);
