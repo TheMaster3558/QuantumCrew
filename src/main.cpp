@@ -7,13 +7,22 @@
 /////
 
 
-pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
-pros::Motor flap(6, pros::E_MOTOR_GEAR_RED);
+pros::ADIDigitalOut rightFlap('A');
+bool rightFlapState = false;
 
+pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
 pros::Motor catapult(8, pros::E_MOTOR_GEAR_RED, true);
 
 
 unsigned int catapultVelocity = 55;
+
+
+void updateFlaps() {
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+        rightFlapState = !rightFlapState;
+        rightFlap.set_value(rightFlapState);
+    }
+}
 
 
 void updateCatapult() {
@@ -45,22 +54,6 @@ void updateIntake() {
     }
     else {
         intake.brake();
-    }
-}
-
-
-bool in = true;
-
-
-void toggleFlap() {
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-        in = !in;
-        if (in) {
-            flap.move_relative(-400, 100);
-        }
-        else {
-            flap.move_relative(400, 100);
-        }
     }
 }
 
@@ -136,10 +129,8 @@ void initialize() {
     exit_condition_defaults();
 
     catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    flap.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 
     intake.tare_position();
-    flap.tare_position();
     catapult.tare_position();
 
     // Autonomous Selector using LLEMU
@@ -229,7 +220,7 @@ void opcontrol() {
 
         updateCatapult();
         updateIntake();
-        toggleFlap();
+        updateFlaps();
         updateDisplay();
 
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
