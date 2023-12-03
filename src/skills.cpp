@@ -5,40 +5,47 @@
 // Skills Auton
 ///
 void skills() {
-    chassis.set_turn_pid(45, TURN_SPEED);
+    catapult.move_relative(500, 600);
+
+    pros::delay(13000);
+    chassis.set_drive_pid(-25, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(6, DRIVE_SPEED);
+    chassis.set_drive_pid(25.5, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(-20, TURN_SPEED);
+    pros::delay(13000);
+    chassis.set_drive_pid(-25, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(5, DRIVE_SPEED);
+    chassis.set_drive_pid(25.5, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    catapult.move_velocity(catapultVelocity);
-    pros::delay(40000);
-    catapult.brake();
-
-    chassis.set_turn_pid(70, TURN_SPEED);
+    pros::delay(13000);
+    chassis.set_drive_pid(-30, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(9.5, DRIVE_SPEED, true);
-    chassis.wait_drive();
-
-    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
-    chassis.wait_drive();
-
-    chassis.set_drive_pid(7, DRIVE_SPEED, true);
+    chassis.set_swing_pid(ez::LEFT_SWING, -45, SWING_SPEED);
     chassis.wait_drive();
 
     chassis.set_drive_pid(-15, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.set_swing_pid(ez::LEFT_SWING, -20, SWING_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(32, true);
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
     chassis.wait_drive();
 }
