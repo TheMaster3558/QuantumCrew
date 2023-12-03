@@ -144,6 +144,9 @@ void initialize() {
     // Initialize chassis and auton selector
     chassis.initialize();
     ez::as::initialize();
+
+    pros::delay(20000);
+    autonomous();
 }
 
 
