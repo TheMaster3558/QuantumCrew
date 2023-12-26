@@ -57,11 +57,21 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern pros::ADIDigitalOut rightFlap;
-extern bool rightFlapState;
+
+
+#define LEFT_FLAP_PORT 'A'
+#define RIGHT_FLAP_PORT 'B'
+#define INTAKE_PORT 1
+#define CATAPULT_PORT 8
+#define LEFT_MOTOR_PORTS {-2, -3, -7}
+#define RIGHT_MOTOR_PORTS {4, 5, 6}
+#define IMU_PORT 9
+
 extern pros::Motor intake;
 extern pros::Motor catapult;
-extern unsigned int catapultVelocity;
+extern int catapultVelocity;
+
+void setFlaps(bool left, bool right);
 
 void autonomous(void);
 void initialize(void);

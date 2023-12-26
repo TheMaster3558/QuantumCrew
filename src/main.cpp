@@ -7,20 +7,32 @@
 /////
 
 
-pros::ADIDigitalOut rightFlap('A');
+pros::ADIDigitalOut leftFlap(LEFT_FLAP_PORT);
+bool leftFlapState = false;
+pros::ADIDigitalOut rightFlap(RIGHT_FLAP_PORT);
 bool rightFlapState = false;
 
-pros::Motor intake(1, pros::E_MOTOR_GEAR_GREEN);
-pros::Motor catapult(8, pros::E_MOTOR_GEAR_RED, true);
+pros::Motor intake(INTAKE_PORT, pros::E_MOTOR_GEAR_GREEN);
+pros::Motor catapult(CATAPULT_PORT, pros::E_MOTOR_GEAR_RED, true);
+
+int catapultVelocity = 65;
 
 
-unsigned int catapultVelocity = 65;
+void setFlaps(bool left, bool right) {
+    leftFlapState = left;
+    rightFlapState = right;
+
+    leftFlap.set_value(leftFlapState);
+    rightFlap.set_value(rightFlapState);
+}
 
 
 void updateFlaps() {
+    static bool bothFlapsState = false;
+
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        rightFlapState = !rightFlapState;
-        rightFlap.set_value(rightFlapState);
+        bothFlapsState = !bothFlapsState;
+        setFlaps(bothFlapsState, bothFlapsState);
     }
 }
 
@@ -72,28 +84,28 @@ void updateDisplay() {
 Drive chassis(
         // Left Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        {-2, -3, -7}
+        LEFT_MOTOR_PORTS
 
         // Right Chassis Ports (negative port will reverse it!)
         //   the first port is the sensored port (when trackers are not used!)
-        , {4, 5, 6}
+        , RIGHT_MOTOR_PORTS
 
         // IMU Port
-        , 9
+        , IMU_PORT
 
         // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
         //    (or tracking wheel diameter)
-        , 4.125
+        , 3.25
 
         // Cartridge RPM
         //   (or tick per rotation if using tracking wheels)
-        , 257
+        , 600
 
         // External Gear Ratio (MUST BE DECIMAL)
         //    (or gear ratio of tracking wheel)
-        // eg. if you.r drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
+        // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
         // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-        , 2.333
+        , 1.667
 
         // Uncomment if using tracking wheels
         /*
@@ -144,9 +156,6 @@ void initialize() {
     // Initialize chassis and auton selector
     chassis.initialize();
     ez::as::initialize();
-
-    pros::delay(20000);
-    autonomous();
 }
 
 
@@ -212,6 +221,7 @@ void autonomous() {
 void opcontrol() {
     // This is preference to what you like to drive on.
     chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
+    setFlaps(false, false); // Flaps may be uneven from autons
 
     while (true) {
 
