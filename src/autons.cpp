@@ -253,47 +253,164 @@ void doNothing() {
 
 
 ///
-//  Score the match loaded ball
+// Auton for when you are on the defensive side in qualifying
+// 1. Move forward 6 inches
+// 2. Turn on left flap TODO
+// 3. Move back 6.5 inches
+// 4. Turn off flaps TODO
+// 5. Move forward 25 inches
+// 6. Turn right 45 degrees from starting position
+// 7. Move forward 4 inches and run intake in reverse
+// 8. Move back 5 inches and spin around
+// 9. Push back 10 inches and push ball in
+// 10. Move forward 3 inches
+// 11. Rotate back to starting position
+// 12. Move back 35 inches
+// 13. Turn left 45 degrees
+// 14. Move back 15 inches
+// 15. Turn on right flap to touch elevation bar TODO
 ///
-void pushInitialBall(int angleMultipler) {
-    catapult.move_relative(800, 600);
-    pros::delay(500);
+void defensiveQual() {
+    chassis.set_angle(-45);
 
-    chassis.set_drive_pid(22.75, DRIVE_SPEED, true);
+    chassis.set_drive_pid(6, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(90 * angleMultipler, TURN_SPEED);
+    // turn on left flap
+
+    chassis.set_drive_pid(-6.5, DRIVE_SPEED, false);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(5, DRIVE_SPEED);
-    intake.move_velocity(200);
-    pros::delay(2000);
+    // turn off left flap
 
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(0, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(4, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
 
     chassis.set_drive_pid(-5, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(5, DRIVE_SPEED);
+    chassis.set_turn_pid(180, DRIVE_SPEED);
     chassis.wait_drive();
+
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(-45, DRIVE_SPEED, true);
+    chassis.set_drive_pid();
+
+    chassis.set_drive_pid(-35, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(15, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    // turn on right flap to touch elevation bar
+}
+
+
+///
+// Auton for when you are on the offensive side in qualifying
+// 1. Move forward 48 inches
+// 2. Turn right 90 degrees
+// 3. Move forward 4 inches and run intake in reverse
+// 4. Move back 5 inches
+// 5. Turn right 150 degrees
+// 6. Move forward 35 inches and suck balls in with intake
+// 7. Move back 5 inches and turn 180 degrees around
+// 8. Move 5 inches forward and suck intake outwards
+// 9. Turn to the 45 degrees left from the starting position
+// 10. Move forward 12 inches and suck balls in with intake
+// 11. Turn to 90 degrees left of the original position
+// 12. Open flaps and move back 30 inches TODO
+// 13. Move forward 3 inches and turn around 180 degrees
+// 14. Outtake ball and push forward 3 inches then back 3 inches
+// 15. Turn right 45 degrees of the starting position and move back 50 inches
+// 16. Turn right 90 degrees of the starting position
+// 17. Turn on right flap and move back 5 inches
+///
+void offensiveQual() {
+    chassis.set_drive_pid(48, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(4, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(250, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(35, DRIVE_SPEED, true);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(80, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-45, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(12, DRIVE_SPEED);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    // open both flaps
 
     chassis.set_drive_pid(-3, DRIVE_SPEED);
     chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
     intake.brake();
-}
 
+    chassis.set_drive_pid(-3, DRIVE_SPEED);
+    chassis.wait_drive();
 
-///
-// Auton for if you need to turn right
-// 1. Score match loaded ball
-///
-void goRight() {
-    pushInitialBall(1);
-}
+    chassis.set_drive_pid(45, TURN_SPEED);
+    chassis.wait_drive();
 
-///
-// Auton for if you need to turn left
-// 1. Score match loaded ball
-///
-void goLeft() {
-    pushInitialBall(-1);
+    chassis.set_drive_pid(-50, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    // open right flap TODO
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
 }
