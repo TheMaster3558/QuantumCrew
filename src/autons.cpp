@@ -255,9 +255,9 @@ void doNothing() {
 ///
 // Auton for when you are on the defensive side in qualifying
 // 1. Move forward 6 inches
-// 2. Turn on left flap TODO
+// 2. Turn on left flap
 // 3. Move back 6.5 inches
-// 4. Turn off flaps TODO
+// 4. Turn off flaps
 // 5. Move forward 25 inches
 // 6. Turn right 45 degrees from starting position
 // 7. Move forward 4 inches and run intake in reverse
@@ -268,7 +268,7 @@ void doNothing() {
 // 12. Move back 35 inches
 // 13. Turn left 45 degrees
 // 14. Move back 15 inches
-// 15. Turn on right flap to touch elevation bar TODO
+// 15. Turn on right flap to touch elevation bar
 ///
 void defensiveQual() {
     chassis.set_angle(-45);
@@ -276,12 +276,12 @@ void defensiveQual() {
     chassis.set_drive_pid(6, DRIVE_SPEED);
     chassis.wait_drive();
 
-    // turn on left flap
+    setFlaps(true, false);
 
     chassis.set_drive_pid(-6.5, DRIVE_SPEED, false);
     chassis.wait_drive();
 
-    // turn off left flap
+    setFlaps(false, false);
 
     chassis.set_drive_pid(25, DRIVE_SPEED, true);
     chassis.wait_drive();
@@ -306,8 +306,8 @@ void defensiveQual() {
     chassis.set_drive_pid(3, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(-45, DRIVE_SPEED, true);
-    chassis.set_drive_pid();
+    chassis.set_turn_pid(-45, DRIVE_SPEED);
+    chassis.wait_drive();
 
     chassis.set_drive_pid(-35, DRIVE_SPEED, true);
     chassis.wait_drive();
@@ -318,7 +318,7 @@ void defensiveQual() {
     chassis.set_drive_pid(15, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    // turn on right flap to touch elevation bar
+    setFlaps(false, true);
 }
 
 
@@ -335,7 +335,7 @@ void defensiveQual() {
 // 9. Turn to the 45 degrees left from the starting position
 // 10. Move forward 12 inches and suck balls in with intake
 // 11. Turn to 90 degrees left of the original position
-// 12. Open flaps and move back 30 inches TODO
+// 12. Open flaps and move back 30 inches
 // 13. Move forward 3 inches and turn around 180 degrees
 // 14. Outtake ball and push forward 3 inches then back 3 inches
 // 15. Turn right 45 degrees of the starting position and move back 50 inches
@@ -384,10 +384,15 @@ void offensiveQual() {
     chassis.set_turn_pid(-90, TURN_SPEED);
     chassis.wait_drive();
 
-    // open both flaps
+    setFlaps(true, true);
 
-    chassis.set_drive_pid(-3, DRIVE_SPEED);
+    chassis.set_drive_pid(-30, DRIVE_SPEED);
     chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
 
     chassis.set_turn_pid(90, TURN_SPEED);
     chassis.wait_drive();
@@ -409,8 +414,8 @@ void offensiveQual() {
     chassis.set_turn_pid(90, TURN_SPEED);
     chassis.wait_drive();
 
-    // open right flap TODO
+    setFlaps(false, false);
 
-    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.set_drive_pid(-10, DRIVE_SPEED);
     chassis.wait_drive();
 }
