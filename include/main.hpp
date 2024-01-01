@@ -63,8 +63,8 @@ extern "C" {
 #define RIGHT_FLAP_PORT 'B'
 #define INTAKE_PORT 1
 #define CATAPULT_PORT 8
-#define LEFT_MOTOR_PORTS {-2, -3, -7}
-#define RIGHT_MOTOR_PORTS {4, 5, 6}
+#define LEFT_MOTOR_PORTS {-2, 3, -7}
+#define RIGHT_MOTOR_PORTS {4, -5, 6}
 #define IMU_PORT 9
 
 extern pros::Motor intake;
