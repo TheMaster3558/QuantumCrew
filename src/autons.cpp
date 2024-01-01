@@ -254,21 +254,6 @@ void doNothing() {
 
 ///
 // Auton for when you are on the defensive side in qualifying
-// 1. Move forward 6 inches
-// 2. Turn on left flap
-// 3. Move back 6.5 inches
-// 4. Turn off flaps
-// 5. Move forward 25 inches
-// 6. Turn right 45 degrees from starting position
-// 7. Move forward 4 inches and run intake in reverse
-// 8. Move back 5 inches and spin around
-// 9. Push back 10 inches and push ball in
-// 10. Move forward 3 inches
-// 11. Rotate back to starting position
-// 12. Move back 35 inches
-// 13. Turn left 45 degrees
-// 14. Move back 15 inches
-// 15. Turn on right flap to touch elevation bar
 ///
 void defensiveQual() {
     chassis.set_angle(-45);
@@ -324,26 +309,9 @@ void defensiveQual() {
 
 ///
 // Auton for when you are on the offensive side in qualifying
-// 1. Move forward 48 inches
-// 2. Turn right 90 degrees
-// 3. Move forward 4 inches and run intake in reverse
-// 4. Move back 5 inches
-// 5. Turn right 150 degrees
-// 6. Move forward 35 inches and suck balls in with intake
-// 7. Move back 5 inches and turn 180 degrees around
-// 8. Move 5 inches forward and suck intake outwards
-// 9. Turn to the 45 degrees left from the starting position
-// 10. Move forward 12 inches and suck balls in with intake
-// 11. Turn to 90 degrees left of the original position
-// 12. Open flaps and move back 30 inches
-// 13. Move forward 3 inches and turn around 180 degrees
-// 14. Outtake ball and push forward 3 inches then back 3 inches
-// 15. Turn right 45 degrees of the starting position and move back 50 inches
-// 16. Turn right 90 degrees of the starting position
-// 17. Turn on right flap and move back 5 inches
 ///
 void offensiveQual() {
-    chassis.set_drive_pid(48, DRIVE_SPEED, true);
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
     chassis.wait_drive();
 
     chassis.set_turn_pid(90, TURN_SPEED);
@@ -360,7 +328,7 @@ void offensiveQual() {
     chassis.set_turn_pid(250, TURN_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(35, DRIVE_SPEED, true);
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
     intake.move_velocity(200);
     chassis.wait_drive();
     intake.brake();
@@ -417,5 +385,137 @@ void offensiveQual() {
     setFlaps(false, false);
 
     chassis.set_drive_pid(-10, DRIVE_SPEED);
+    chassis.wait_drive();
+}
+
+///
+// Auton for when you are the offensive side in elims
+///
+void offensiveElims() {
+    chassis.set_angle(225);
+
+    setFlaps(true, false);
+
+    chassis.set_drive_pid(6, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+    chassis.set_turn_pid(0, TURN_SPEED);
+    chassis.wait_drive();
+
+    intake.move_velocity(-200);
+    pros::delay(500);
+    intake.brake();
+
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(true, true);
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(300, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake()
+
+    chassis.set_turn_pid(80, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-45, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(12, DRIVE_SPEED);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(true, true);
+
+    chassis.set_drive_pid(-30, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
+}
+
+
+///
+// auton for when you are on the defensive side in elims
+///
+void defensiveQual() {
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(true, true);
+
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    intake.move_velocity(-200);
+    pros::delay(500);
+    intake.brake();
+
+    chassis.set_drive_pid(-3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_swing_pid(ez::LEFT_SWING, 180, SWING_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(20, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(10, DRIVE_SPEED, true);
     chassis.wait_drive();
 }
