@@ -144,6 +144,7 @@ void initialize() {
 
     intake.tare_position();
     catapult.tare_position();
+    setFlaps(false, false);
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
