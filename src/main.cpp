@@ -28,11 +28,28 @@ void setFlaps(bool left, bool right) {
 
 
 void updateFlaps() {
-    static bool bothFlapsState = false;
+    bool previousLeftFlapState = leftFlapState;
+    bool previousRightFlapState = rightFlapState;
 
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        bothFlapsState = !bothFlapsState;
-        setFlaps(bothFlapsState, bothFlapsState);
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+        if (leftFlapState != rightFlapState) {
+            leftFlapState = false;
+            rightFlapState = false;
+        }
+        else {
+            leftFlapState = !leftFlapState;
+            rightFlapState = !rightFlapState;
+        }
+    }
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
+        leftFlapState = !leftFlapState;
+    }
+    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+        rightFlapState = !rightFlapState;
+    }
+
+    if (previousLeftFlapState != leftFlapState || previousRightFlapState != rightFlapState) {
+        setFlaps(leftFlapState, rightFlapState);
     }
 }
 
@@ -150,8 +167,10 @@ void initialize() {
     ez::as::auton_selector.add_autons({
                                               Auton("Do nothing", doNothing),
                                               Auton("Skills\nAuton for skills", skills),
-                                              Auton("Right\nNeed to turn right", goRight),
-                                              Auton("Left\nNeed to turn left", goLeft)
+                                              Auton("Offensive Qualifying", offensiveQual),
+                                              Auton("Defensive Qualifying", defensiveQual),
+                                              Auton("Offensive Elimination", offensiveElims),
+                                              Auton("Defensive Elimination", defensiveElims)
                                       });
 
     // Initialize chassis and auton selector

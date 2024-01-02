@@ -19,6 +19,8 @@ void doNothing();
 void skills();
 void defensiveQual();
 void offensiveQual();
+void defensiveElims();
+void offensiveElims();
 
 void default_constants();
 void one_mogo_constants();

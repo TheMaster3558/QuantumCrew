@@ -427,7 +427,7 @@ void offensiveElims() {
     chassis.set_drive_pid(55, DRIVE_SPEED, true);
     intake.move_velocity(200);
     chassis.wait_drive();
-    intake.brake()
+    intake.brake();
 
     chassis.set_turn_pid(80, DRIVE_SPEED);
     chassis.wait_drive();
@@ -477,7 +477,7 @@ void offensiveElims() {
 ///
 // auton for when you are on the defensive side in elims
 ///
-void defensiveQual() {
+void defensiveElims() {
     chassis.set_drive_pid(55, DRIVE_SPEED, true);
     chassis.wait_drive();
 
