@@ -166,6 +166,8 @@ void initialize() {
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
                                               Auton("Do nothing", doNothing),
+                                              Auton("Auton for drive PID tests", drive_example),
+                                              Auton("Auton for turn PID tests", turn_example),
                                               Auton("Skills\nAuton for skills", skills),
                                               Auton("Offensive Qualifying", offensiveQual),
                                               Auton("Defensive Qualifying", defensiveQual),
