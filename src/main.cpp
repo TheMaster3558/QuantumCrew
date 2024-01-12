@@ -74,8 +74,6 @@ void updateFlaps() {
 
 
 void moveCatapultWithPID(int target) {
-    catapult.tare_position();
-
     cataPID.set_target(target);
     while (cataPID.exit_condition(catapult) == ez::RUNNING) {
         pros::delay(ez::util::DELAY_TIME);
