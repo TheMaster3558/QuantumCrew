@@ -14,8 +14,27 @@ bool rightFlapState = false;
 
 pros::Motor intake(INTAKE_PORT, pros::E_MOTOR_GEAR_GREEN);
 pros::Motor catapult(CATAPULT_PORT, pros::E_MOTOR_GEAR_RED, true);
+PID cataPID{100, 5, 50, 100, "Catapult"};
+pros::Rotation rotation(0);
 
 int catapultVelocity = 65;
+
+
+int getMaxVelocity(pros::Motor motor) {
+    pros::motor_gearset_e cartridge = motor.get_gearing();
+    if (cartridge == pros::E_MOTOR_GEAR_BLUE) {
+        return 600;
+    }
+    else if (cartridge == pros::E_MOTOR_GEAR_BLUE) {
+        return 200;
+    }
+    return 100;
+}
+
+
+inline int rotationSensorDegrees() {
+    return rotation.get_angle() / 100;
+}
 
 
 void setFlaps(bool left, bool right) {
@@ -54,32 +73,35 @@ void updateFlaps() {
 }
 
 
-void updateCatapult() {
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-        catapultVelocity--;
-    }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-        catapultVelocity++;
-    }
+void moveCatapultWithPID(int target) {
+    catapult.tare_position();
 
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+    cataPID.set_target(target);
+    while (cataPID.exit_condition(catapult) == ez::RUNNING) {
+        pros::delay(ez::util::DELAY_TIME);
+        catapult.move_voltage(cataPID.compute(rotationSensorDegrees()));
+    }
+}
+
+
+void updateCatapult() {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2) || rotationSensorDegrees > CATAPULT_HOLD_ANGLE) {
         catapult.move_velocity(catapultVelocity);
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-        catapult.move_velocity(-catapultVelocity);
-    }
     else {
-        catapult.brake();
+        moveCatapultWithPID(CATAPULT_HOLD_ANGLE);
     }
 }
 
 
 void updateIntake() {
+    static int velocity = getMaxVelocity(intake);
+
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-        intake.move_velocity(200);
+        intake.move_velocity(velocity);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-        intake.move_velocity(-200);
+        intake.move_velocity(-velocity);
     }
     else {
         intake.brake();
@@ -161,6 +183,7 @@ void initialize() {
 
     intake.tare_position();
     catapult.tare_position();
+    rotation.reset_position();
     setFlaps(false, false);
 
     // Autonomous Selector using LLEMU
@@ -222,6 +245,8 @@ void autonomous() {
     chassis.reset_drive_sensor(); // Reset drive sensors to 0
     chassis.set_drive_brake(pros::E_MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 
+    moveCatapultWithPID(45);
+
     ez::as::auton_selector.print_selected_auton();
     ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
 }
@@ -243,6 +268,7 @@ void autonomous() {
 void opcontrol() {
     // This is preference to what you like to drive on.
     chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
+    moveCatapultWithPID(45);
     setFlaps(false, false); // Flaps may be uneven from autons
 
     while (true) {

@@ -66,6 +66,7 @@ extern "C" {
 #define LEFT_MOTOR_PORTS {-2, 3, -7}
 #define RIGHT_MOTOR_PORTS {4, -5, 6}
 #define IMU_PORT 9
+#define CATAPULT_HOLD_ANGLE 45
 
 extern pros::Motor intake;
 extern pros::Motor catapult;
