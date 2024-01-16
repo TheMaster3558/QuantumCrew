@@ -14,6 +14,10 @@ bool rightFlapState = false;
 
 pros::Motor intake(INTAKE_PORT, pros::E_MOTOR_GEAR_GREEN);
 pros::Motor catapult(CATAPULT_PORT, pros::E_MOTOR_GEAR_RED, true);
+pros::Rotation rotation(0);
+
+PID catapultPID{2.5, 0, 0, 0, "Catapult"};
+
 
 int catapultVelocity = 65;
 
@@ -28,47 +32,39 @@ void setFlaps(bool left, bool right) {
 
 
 void updateFlaps() {
-    bool previousLeftFlapState = leftFlapState;
-    bool previousRightFlapState = rightFlapState;
-
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
         if (leftFlapState != rightFlapState) {
-            leftFlapState = false;
-            rightFlapState = false;
+            setFlaps(false, false);
         }
         else {
-            leftFlapState = !leftFlapState;
-            rightFlapState = !rightFlapState;
+            setFlaps(!leftFlapState, !rightFlapState);
         }
     }
     else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        leftFlapState = !leftFlapState;
+        setFlaps(!leftFlapState, rightFlapState);
     }
     else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        rightFlapState = !rightFlapState;
-    }
-
-    if (previousLeftFlapState != leftFlapState || previousRightFlapState != rightFlapState) {
-        setFlaps(leftFlapState, rightFlapState);
+        setFlaps(leftFlapState, !rightFlapState);
     }
 }
 
 
-void updateCatapult() {
-    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-        catapultVelocity--;
-    }
-    else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-        catapultVelocity++;
-    }
+int catapultAngle() {
+    return rotation.get_angle() / 100;
+}
 
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+
+void updateCatapult() {
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        // move_velocity keeps it the velocity constant
         catapult.move_velocity(catapultVelocity);
     }
-    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-        catapult.move_velocity(-catapultVelocity);
+    else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+        catapult.move(catapultPID.compute(catapultAngle()));
     }
     else {
+        catapult.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
         catapult.brake();
     }
 }
@@ -76,10 +72,10 @@ void updateCatapult() {
 
 void updateIntake() {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-        intake.move_velocity(200);
+        intake.move(MAX_SPEED);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-        intake.move_velocity(-200);
+        intake.move_velocity(-MAX_SPEED);
     }
     else {
         intake.brake();
@@ -92,8 +88,6 @@ void updateDisplay() {
     if (++count % (50 / ez::util::DELAY_TIME) != 0) {
         return;
     }
-
-    ez::print_to_screen(to_string(catapultVelocity));
 }
 
 
@@ -157,11 +151,11 @@ void initialize() {
     default_constants();
     exit_condition_defaults();
 
-    catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-
     intake.tare_position();
     catapult.tare_position();
+    rotation.reset_position();
     setFlaps(false, false);
+    catapultPID.set_target(45);
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
