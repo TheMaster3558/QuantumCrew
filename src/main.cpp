@@ -49,7 +49,7 @@ void updateFlaps() {
 }
 
 
-inline int catapultAngle() {
+int catapultAngle() {
     return rotation.get_angle() / 100;
 }
 

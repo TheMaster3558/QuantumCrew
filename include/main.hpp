@@ -74,6 +74,7 @@ extern pros::Motor catapult;
 extern int catapultVelocity;
 
 void setFlaps(bool left, bool right);
+int catapultAngle();
 
 void autonomous(void);
 void initialize(void);
