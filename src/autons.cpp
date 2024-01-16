@@ -392,7 +392,7 @@ void offensiveQual() {
 // Auton for when you are the offensive side in elims
 ///
 void offensiveElims() {
-    chassis.set_angle(45)
+    chassis.set_angle(45);
 
     setFlaps(false, true);
 
