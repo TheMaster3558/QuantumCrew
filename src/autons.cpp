@@ -253,47 +253,268 @@ void doNothing() {
 
 
 ///
-//  Score the match loaded ball
+// Auton for when you are on the defensive side in qualifying
 ///
-void pushInitialBall(int angleMultipler) {
-    catapult.move_relative(800, 600);
-    pros::delay(500);
+void defensiveQual() {
+    chassis.set_angle(-45);
 
-    chassis.set_drive_pid(22.75, DRIVE_SPEED, true);
+    chassis.set_drive_pid(6, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(90 * angleMultipler, TURN_SPEED);
+    setFlaps(true, false);
+
+    chassis.set_drive_pid(-6.5, DRIVE_SPEED, false);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(5, DRIVE_SPEED);
-    intake.move_velocity(200);
-    pros::delay(2000);
+    setFlaps(false, false);
 
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(0, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(4, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
 
     chassis.set_drive_pid(-5, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_drive_pid(5, DRIVE_SPEED);
+    chassis.set_turn_pid(180, DRIVE_SPEED);
     chassis.wait_drive();
+
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(-45, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-35, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(15, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    setFlaps(false, true);
+}
+
+
+///
+// Auton for when you are on the offensive side in qualifying
+///
+void offensiveQual() {
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(4, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(250, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(80, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-45, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(12, DRIVE_SPEED);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(true, true);
+
+    chassis.set_drive_pid(-30, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
 
     chassis.set_drive_pid(-3, DRIVE_SPEED);
     chassis.wait_drive();
+
+    chassis.set_drive_pid(45, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-50, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+
+    chassis.set_drive_pid(-10, DRIVE_SPEED);
+    chassis.wait_drive();
+}
+
+///
+// Auton for when you are the offensive side in elims
+///
+void offensiveElims() {
+    chassis.set_angle(45)
+
+    setFlaps(false, true);
+
+    chassis.set_drive_pid(6, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+
+    chassis.set_turn_pid(0, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
     intake.brake();
+
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(true, true);
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(300, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(80, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(5, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-45, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(12, DRIVE_SPEED);
+    intake.move_velocity(200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(true, true);
+
+    chassis.set_drive_pid(-30, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(3, DRIVE_SPEED);
+    intake.move_velocity(-200);
+    chassis.wait_drive();
+    intake.brake();
+
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-5, DRIVE_SPEED);
+    chassis.wait_drive();
 }
 
 
 ///
-// Auton for if you need to turn right
-// 1. Score match loaded ball
+// auton for when you are on the defensive side in elims
 ///
-void goRight() {
-    pushInitialBall(1);
-}
+void defensiveElims() {
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    chassis.wait_drive();
 
-///
-// Auton for if you need to turn left
-// 1. Score match loaded ball
-///
-void goLeft() {
-    pushInitialBall(-1);
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+
+    setFlaps(true, true);
+
+    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    setFlaps(false, false);
+
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    intake.move_velocity(-200);
+    pros::delay(500);
+    intake.brake();
+
+    chassis.set_drive_pid(-3, DRIVE_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_swing_pid(ez::LEFT_SWING, 180, SWING_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(20, DRIVE_SPEED, true);
+    chassis.wait_drive();
+
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+
+    chassis.set_drive_pid(10, DRIVE_SPEED, true);
+    chassis.wait_drive();
 }

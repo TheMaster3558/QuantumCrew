@@ -17,8 +17,10 @@ void interfered_example();
 
 void doNothing();
 void skills();
-void goRight();
-void goLeft();
+void defensiveQual();
+void offensiveQual();
+void defensiveElims();
+void offensiveElims();
 
 void default_constants();
 void one_mogo_constants();
