@@ -71,6 +71,7 @@ extern "C" {
 
 extern pros::Motor intake;
 extern pros::Motor catapult;
+extern PID catapultPID;
 extern int catapultVelocity;
 
 void setFlaps(bool left, bool right);
