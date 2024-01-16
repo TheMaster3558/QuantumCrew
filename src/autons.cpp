@@ -392,22 +392,21 @@ void offensiveQual() {
 // Auton for when you are the offensive side in elims
 ///
 void offensiveElims() {
-    chassis.set_angle(225);
+    chassis.set_angle(45)
 
-    setFlaps(true, false);
+    setFlaps(false, true);
 
     chassis.set_drive_pid(6, DRIVE_SPEED);
     chassis.wait_drive();
 
-    chassis.set_turn_pid(180, TURN_SPEED);
-    chassis.wait_drive();
-
     setFlaps(false, false);
+
     chassis.set_turn_pid(0, TURN_SPEED);
     chassis.wait_drive();
 
+    chassis.set_drive_pid(5, DRIVE_SPEED);
     intake.move_velocity(-200);
-    pros::delay(500);
+    chassis.wait_drive();
     intake.brake();
 
     chassis.set_turn_pid(180, TURN_SPEED);
