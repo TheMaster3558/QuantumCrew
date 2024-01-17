@@ -155,7 +155,7 @@ void initialize() {
     catapult.tare_position();
     rotation.reset_position();
     setFlaps(false, false);
-    catapultPID.set_target(45);
+    catapultPID.set_target(CATAPULT_HOLD_ANGLE);
 
     // Autonomous Selector using LLEMU
     ez::as::auton_selector.add_autons({
