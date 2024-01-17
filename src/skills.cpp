@@ -25,12 +25,14 @@ void skills() {
     catapult.move_velocity(catapultVelocity);
     pros::delay(45000);
 
-    pros::Task task{[=] {
-        while (catapultPID.exit_condition(catapult) == ez::RUNNING) {
-            catapult.move(catapultPID.compute(catapultAngle()));
-            pros::delay(ez::util::DELAY_TIME)
-        }
-    }};
+    if (catapultAngle() < CATAPULT_HOLD_POSITION) {
+        pros::Task task{[=] {
+            while (catapultPID.exit_condition(catapult) == ez::RUNNING) {
+                catapult.move(catapultPID.compute(catapultAngle()));
+                pros::delay(ez::util::DELAY_TIME)
+            }
+        }};
+    }
 
     chassis.set_swing_pid(ez::LEFT_SWING, 135, SWING_SPEED);
     chassis.wait_drive();
