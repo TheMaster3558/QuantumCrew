@@ -72,10 +72,10 @@ extern "C" {
 extern pros::Motor intake;
 extern pros::Motor catapult;
 extern PID catapultPID;
-extern int catapultVelocity;
+extern int catapult_velocity;
 
-void setFlaps(bool left, bool right);
-int catapultAngle();
+void set_flaps(bool left, bool right);
+int catapult_angle();
 
 void autonomous(void);
 void initialize(void);

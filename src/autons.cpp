@@ -261,12 +261,12 @@ void defensiveQual() {
     chassis.set_drive_pid(6, DRIVE_SPEED);
     chassis.wait_drive();
 
-    setFlaps(true, false);
+    set_flaps(true, false);
 
     chassis.set_drive_pid(-6.5, DRIVE_SPEED, false);
     chassis.wait_drive();
 
-    setFlaps(false, false);
+    set_flaps(false, false);
 
     chassis.set_drive_pid(25, DRIVE_SPEED, true);
     chassis.wait_drive();
@@ -303,7 +303,7 @@ void defensiveQual() {
     chassis.set_drive_pid(15, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    setFlaps(false, true);
+    set_flaps(false, true);
 }
 
 
@@ -352,7 +352,7 @@ void offensiveQual() {
     chassis.set_turn_pid(-90, TURN_SPEED);
     chassis.wait_drive();
 
-    setFlaps(true, true);
+    set_flaps(true, true);
 
     chassis.set_drive_pid(-30, DRIVE_SPEED);
     chassis.wait_drive();
@@ -360,7 +360,7 @@ void offensiveQual() {
     chassis.set_drive_pid(3, DRIVE_SPEED);
     chassis.wait_drive();
 
-    setFlaps(false, false);
+    set_flaps(false, false);
 
     chassis.set_turn_pid(90, TURN_SPEED);
     chassis.wait_drive();
@@ -382,7 +382,7 @@ void offensiveQual() {
     chassis.set_turn_pid(90, TURN_SPEED);
     chassis.wait_drive();
 
-    setFlaps(false, false);
+    set_flaps(false, false);
 
     chassis.set_drive_pid(-10, DRIVE_SPEED);
     chassis.wait_drive();
@@ -394,12 +394,12 @@ void offensiveQual() {
 void offensiveElims() {
     chassis.set_angle(45);
 
-    setFlaps(false, true);
+    set_flaps(false, true);
 
     chassis.set_drive_pid(6, DRIVE_SPEED);
     chassis.wait_drive();
 
-    setFlaps(false, false);
+    set_flaps(false, false);
 
     chassis.set_turn_pid(0, TURN_SPEED);
     chassis.wait_drive();
@@ -412,11 +412,11 @@ void offensiveElims() {
     chassis.set_turn_pid(180, TURN_SPEED);
     chassis.wait_drive();
 
-    setFlaps(true, true);
+    set_flaps(true, true);
     chassis.set_drive_pid(-10, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    setFlaps(false, false);
+    set_flaps(false, false);
     chassis.set_drive_pid(5, DRIVE_SPEED);
     chassis.wait_drive();
 
@@ -447,7 +447,7 @@ void offensiveElims() {
     chassis.set_turn_pid(-90, TURN_SPEED);
     chassis.wait_drive();
 
-    setFlaps(true, true);
+    set_flaps(true, true);
 
     chassis.set_drive_pid(-30, DRIVE_SPEED);
     chassis.wait_drive();
@@ -455,7 +455,7 @@ void offensiveElims() {
     chassis.set_drive_pid(3, DRIVE_SPEED);
     chassis.wait_drive();
 
-    setFlaps(false, false);
+    set_flaps(false, false);
 
     chassis.set_turn_pid(90, TURN_SPEED);
     chassis.wait_drive();
@@ -483,12 +483,12 @@ void defensiveElims() {
     chassis.set_turn_pid(-90, TURN_SPEED);
     chassis.wait_drive();
 
-    setFlaps(true, true);
+    set_flaps(true, true);
 
     chassis.set_drive_pid(-10, DRIVE_SPEED, true);
     chassis.wait_drive();
 
-    setFlaps(false, false);
+    set_flaps(false, false);
 
     chassis.set_drive_pid(30, DRIVE_SPEED, true);
     chassis.wait_drive();

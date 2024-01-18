@@ -19,10 +19,10 @@ pros::Rotation rotation(0);
 PID catapultPID{2.5, 0, 0, 0, "Catapult"};
 
 
-int catapultVelocity = 65;
+int catapult_velocity = 65;
 
 
-void setFlaps(bool left, bool right) {
+void set_flaps(bool left, bool right) {
     leftFlapState = left;
     rightFlapState = right;
 
@@ -31,37 +31,37 @@ void setFlaps(bool left, bool right) {
 }
 
 
-void updateFlaps() {
+void update_flaps() {
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
         if (leftFlapState != rightFlapState) {
-            setFlaps(false, false);
+            set_flaps(false, false);
         }
         else {
-            setFlaps(!leftFlapState, !rightFlapState);
+            set_flaps(!leftFlapState, !rightFlapState);
         }
     }
     else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)) {
-        setFlaps(!leftFlapState, rightFlapState);
+        set_flaps(!leftFlapState, rightFlapState);
     }
     else if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-        setFlaps(leftFlapState, !rightFlapState);
+        set_flaps(leftFlapState, !rightFlapState);
     }
 }
 
 
-int catapultAngle() {
+int catapult_angle() {
     return rotation.get_angle() / 100;
 }
 
 
-void updateCatapult() {
+void update_catapult() {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
         // move_velocity keeps it the velocity constant
-        catapult.move_velocity(catapultVelocity);
+        catapult.move_velocity(catapult_velocity);
     }
     else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
         catapult.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-        catapult.move(catapultPID.compute(catapultAngle()));
+        catapult.move(catapultPID.compute(catapult_angle()));
     }
     else {
         catapult.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
@@ -70,7 +70,7 @@ void updateCatapult() {
 }
 
 
-void updateIntake() {
+void update_intake() {
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
         intake.move(MAX_SPEED);
     }
@@ -83,7 +83,7 @@ void updateIntake() {
 }
 
 
-void updateDisplay() {
+void update_display() {
     static int count = 0;
     if (++count % (50 / ez::util::DELAY_TIME) != 0) {
         return;
@@ -154,7 +154,7 @@ void initialize() {
     intake.tare_position();
     catapult.tare_position();
     rotation.reset_position();
-    setFlaps(false, false);
+    set_flaps(false, false);
     catapultPID.set_target(CATAPULT_HOLD_ANGLE);
 
     // Autonomous Selector using LLEMU
@@ -237,7 +237,7 @@ void autonomous() {
 void opcontrol() {
     // This is preference to what you like to drive on.
     chassis.set_drive_brake(pros::E_MOTOR_BRAKE_COAST);
-    setFlaps(false, false); // Flaps may be uneven from autons
+    set_flaps(false, false); // Flaps may be uneven from autons
 
     while (true) {
 
@@ -247,10 +247,10 @@ void opcontrol() {
         // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
         // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
-        updateCatapult();
-        updateIntake();
-        updateFlaps();
-        updateDisplay();
+        update_catapult();
+        update_intake();
+        update_flaps();
+        update_display();
 
         pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
     }
