@@ -68,6 +68,7 @@ extern "C" {
 #define IMU_PORT 9
 #define CATAPULT_HOLD_ANGLE 45
 #define MAX_SPEED 127
+#define ROTATION_SENSOR_PORT 10
 
 extern pros::Motor intake;
 extern pros::Motor catapult;

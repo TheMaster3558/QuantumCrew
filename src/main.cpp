@@ -14,7 +14,7 @@ bool rightFlapState = false;
 
 pros::Motor intake(INTAKE_PORT, pros::E_MOTOR_GEAR_GREEN);
 pros::Motor catapult(CATAPULT_PORT, pros::E_MOTOR_GEAR_RED, true);
-pros::Rotation rotation(0);
+pros::Rotation rotation(ROTATION_SENSOR_PORT);
 
 PID catapultPID{2.5, 0, 0, 0, "Catapult"};
 
